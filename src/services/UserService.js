@@ -1,22 +1,37 @@
 import axios from "axios";
 
-export async function getAllUsers() {
-  try {
-    const response = await fetch("/api/users");
-    console.log(response + "   Services");
-    return await response.json();
-  } catch (error) {
-    return [];
-  }
-}
+// export async function getAllUsers() {
+//   try {
+//     const response = await fetch("/api/users");
+//     console.log(response + "   Services");
+//     return await response.json();
+//   } catch (error) {
+//     return [];
+//   }
+// }
 export async function createNotes(data) {
   const response = axios({
     method: "post",
-    url: "/api/user",
+    url: "/api/users",
     data,
   });
   console.log(JSON.stringify(data) + "      jay");
   return await response;
+}
+
+export async function deleteNoteById(data){
+console.log(JSON.stringify(data) + "   DELETE Service");
+  // return await axios.delete(
+  //   "http://localhost:9000/api/users",
+  //   { "Content-Type": "application/json" },
+  //   data
+  // );
+   const response = axios({
+     method: "delete",
+     url: "/api/users",
+     data,
+   })
+   return response
 }
 
 export async function getAllNotes() {

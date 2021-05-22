@@ -3,10 +3,14 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./createArea";
-import { getAllNotes, createNotes } from "../services/UserService";
+import {
+  getAllNotes,
+  createNotes,
+  deleteNoteById,
+} from "../services/UserService";
+var count = 0;
 
 function App() {
-  var count = 0;
   const [notes, setNotes] = useState([]);
   const [mNotes, setmNotes] = useState([]);
 
@@ -20,10 +24,11 @@ function App() {
       );
     });
   };
+  console.log("count : " + count);
 
-  if (mNotes.length === 0 && count == 0) {
-    fetchAllNotes();
+  if (count === 0) {
     count++;
+    fetchAllNotes();
   }
 
   // POST REQUEST
@@ -49,19 +54,27 @@ function App() {
     // };
   }
 
+  function deleteNotesData(data) {
+    deleteNoteById(data).then(() => {
+      console.log("WORKING PROPERLY");
+      fetchAllNotes();
+    });
+    //  console.log(data._id + "    deleteNotesData");
+  }
+
   function deleteNote(id) {
     setNotes((prevValue) => {
       return prevValue.filter((notes, index) => {
         return id !== index;
       });
     });
-
-    setmNotes((prevValue) => {
-      return prevValue.filter((notes, index) => {
-        console.log("Id :"+id +" Index: "+ index);
-        return id !== index;
-      });
-    });
+    // NOT REQUIRED THIS METHOD
+    // setmNotes((prevValue) => {
+    //   return prevValue.filter((notes, index) => {
+    //     console.log("Id :" + id + " Index: " + index);
+    //     return id !== index;
+    //   });
+    // });
   }
   return (
     <div>
@@ -81,11 +94,13 @@ function App() {
         return (
           <Note
             // getAllUsers={fetchAllNotes}
-            key={notesData._id}
-            id={index}
+            key={index}
+            id={notesData._id}
             title={title}
+            notesData={notesData}
             content={content}
             deleteNote={deleteNote}
+            deleteNoteById={deleteNotesData}
           />
         );
       })}

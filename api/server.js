@@ -17,6 +17,7 @@ mongoose.connect("mongodb://localhost:27017/KeeperAppDB", {
   useUnifiedTopology: true,
 });
 
+mongoose.set("useFindAndModify", false);
 const itemsShema = new mongoose.Schema({
   title: String,
   content: String,
@@ -60,21 +61,6 @@ app.get("/", (req, res) => {
   // res.send()
 });
 
-app.get("/api/users", (req, res) => {
-  Item.find({}, (err, data) => {
-    if (err) {
-      console.log(err + "               ERROR");
-    } else {
-      console.log("Appii/Users");
-      // console.log(res.json(data));
-      res.send(data);
-
-      // res.json(data + "            Get(api/users)");
-    }
-  });
-  // res.json();
-});
-
 // app.post("/api/user", (req, res) => {
 //   const notes = req.body;
 //   console.log("Adding user:::::", notes);
@@ -83,16 +69,42 @@ app.get("/api/users", (req, res) => {
 //   res.json("user addedd" + res.body );
 // });
 
-app.post("/api/user", (req, res) => {
-  const notes = req.body;
-  console.log("Adding user:::::", notes.title + "    " + notes.content);
+app
+  .route("/api/users")
+  .post((req, res) => {
+    const notes = req.body;
+    console.log("Adding user:::::", notes.title + "    " + notes.content);
 
-  res.json("user addedd");
-  const newNote = new Item(notes);
-  newNote.save();
-});
+    res.json("user addedd");
+    const newNote = new Item(notes);
+    newNote.save();
+  })
+  .get((req, res) => {
+    Item.find({}, (err, data) => {
+      if (err) {
+        console.log(err + "               ERROR");
+      } else {
+        console.log("Appii/Users");
+        res.send(data);
+      }
+    });
+  })
+  .delete((req, res) => {
+    const notesData = req.body;
+    const id=notesData._id
+    console.log(" Delete from server " + notesData._id);
+    Item.findByIdAndRemove(id, (err,data)=>{
+      if(err){
+        console.log(err);
 
+      }else{
+        console.log(data + "  SUceesss");
+        
+        res.send(data)
 
+      }
+    });
+  });
 
 
 // app.post("/api", (req, res) => {
