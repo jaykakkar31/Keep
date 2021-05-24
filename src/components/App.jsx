@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Login from "./Login";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./createArea";
+import Register from "./Register";
 import {
   getAllNotes,
   createNotes,
@@ -77,35 +80,53 @@ function App() {
     // });
   }
   return (
-    <div>
-      <Header />
+    <Router>
+      <div>
+        <Link to="/login"></Link>
+        <Link to="/"></Link>
+        <Link to="/"></Link>
+        <Switch>
+          <Route exact path="/login">
+            <Login />
+          </Route>
 
-      <CreateArea
-        // getAllUsers={fetchAllNotes}
-        //  createUser={userCreate}
-        addingItems={handleClick}
-      />
-      {/* {notes.map((notesData, index) => {  */}
+          <Route path="/register">
+            <Register/>
+          </Route>
+          <Route path="/">
+            <div>
+              <Header />
 
-      {mNotes.map((notesData, index) => {
-        const { title, content } = notesData;
-        console.log(index + "  MAP  " + notesData.title);
+              <CreateArea
+                // getAllUsers={fetchAllNotes}
+                //  createUser={userCreate}
+                addingItems={handleClick}
+              />
+              {/* {notes.map((notesData, index) => {  */}
 
-        return (
-          <Note
-            // getAllUsers={fetchAllNotes}
-            key={index}
-            id={notesData._id}
-            title={title}
-            notesData={notesData}
-            content={content}
-            deleteNote={deleteNote}
-            deleteNoteById={deleteNotesData}
-          />
-        );
-      })}
-      <Footer />
-    </div>
+              {mNotes.map((notesData, index) => {
+                const { title, content } = notesData;
+                console.log(index + "  MAP  " + notesData.title);
+
+                return (
+                  <Note
+                    // getAllUsers={fetchAllNotes}
+                    key={index}
+                    id={notesData._id}
+                    title={title}
+                    notesData={notesData}
+                    content={content}
+                    deleteNote={deleteNote}
+                    deleteNoteById={deleteNotesData}
+                  />
+                );
+              })}
+              <Footer />
+            </div>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

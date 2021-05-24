@@ -1,5 +1,4 @@
 * {
-  
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -9,9 +8,9 @@ html {
 }
 body {
   background: #eee;
-  padding: 0 16px;
+  padding: 0 0 0 16px;
+  /* padding: 0 16px; */
   background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
-
 }
 
 header {
@@ -19,6 +18,7 @@ header {
   margin: auto -16px;
   padding: 16px 32px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  position: sticky;
 }
 
 header h1 {
@@ -37,6 +37,8 @@ footer {
 
 footer p {
   color: #ccc;
+  display: inline-flex;
+  align-items: center;
 }
 .note {
   background: #fff;
@@ -102,4 +104,115 @@ form.create-note button {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   outline: none;
+}
+.login-reg-panel {
+  background: #f5ba13;
+  height: 30rem;
+  display: flex;
+  width: 60%;
+  margin: 7% 20%;
+  justify-content: start;
+  text-align: center;
+}
+
+.show-log-panel {
+}
+
+/* WHITE PANEL */
+.white-panel {
+  height: 32.25rem;
+  box-shadow: 0 0 15px 9px #00000096;
+  transition: 0.3s ease-in-out;
+
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 1;
+  width: 50%;
+}
+.white-panel h2 {
+  font-size: 2rem;
+  /* margin-bottom: 1rem; */
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+}
+/* LOGIN  */
+
+.login-show,
+.register-show {
+  margin: 1.25rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px;
+  border-radius: 1.875rem;
+  color: #242424;
+  z-index: 1;
+  opacity: 0.9;
+  text-align: left;
+  transition: 0.3s ease-in-out;
+}
+
+.login-show input[type="text"],
+.login-show input[type="password"] {
+  width: 100%;
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #b5b5b5;
+}
+.login-show a {
+  display: inline-flex;
+  margin-left: 4rem;
+
+  /* padding: 10px 0; */
+}
+.login-show input[type="button"] {
+  max-width: 150px;
+  width: 100%;
+  background: #444444;
+  color: #f9f9f9;
+  border: none;
+  padding: 10px;
+  text-transform: uppercase;
+  border-radius: 2px;
+position: relative;
+
+float:right;
+  cursor: pointer;
+}
+/* REGISTER */
+/* .register-show {
+  margin: 1.25rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px;
+  border-radius: 1.875rem;
+} */
+
+.register-show h2 {
+  font-size: 2rem;
+  /* margin-bottom: 1rem; */
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.register-show input[type="button"] {
+  max-width: 150px;
+  width: 100%;
+  background: #444444;
+  color: #f9f9f9;
+  border: none;
+  padding: 10px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  float: right;
+  cursor: pointer;
+}
+
+.register-show input[type="text"],
+.register-show input[type="password"] {
+  width: 100%;
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #b5b5b5;
 }

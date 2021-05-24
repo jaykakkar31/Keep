@@ -48,12 +48,17 @@ function CreateArea(props) {
     //   .then((res) => console.log(res.data));
 
     // props.createUser()
-
-    props.addingItems(notesData);
-    setNotesData({
-      title: "",
-      content: "",
-    });
+    if (notesData.title === "") {
+      alert("Title Cannot Be Empty");
+    } else if (notesData.content === "") {
+      alert("Content Cannot Be Empty");
+    } else {
+      props.addingItems(notesData);
+      setNotesData({
+        title: "",
+        content: "",
+      });
+    }
   }
 
   return (
@@ -63,11 +68,10 @@ function CreateArea(props) {
           <input
             onChange={handleChange}
             //   onChange={handleTitleChange}
-            
+
             name="title"
             placeholder="Title"
             value={notesData.title}
-            
           />
         )}
         <textarea
