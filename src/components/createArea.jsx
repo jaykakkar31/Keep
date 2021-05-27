@@ -16,6 +16,7 @@ function CreateArea(props) {
   const [notesData, setNotesData] = useState({
     title: "",
     content: "",
+   
   });
   //   const [inputTitle, setInputTitle] = useState([]);
   //   const [notes, setNotes] = useState([]);
@@ -57,6 +58,7 @@ function CreateArea(props) {
       setNotesData({
         title: "",
         content: "",
+
       });
     }
   }

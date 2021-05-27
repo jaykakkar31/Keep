@@ -14,6 +14,9 @@ body {
 }
 
 header {
+  display: flex;
+   /* align-items: center; */
+  justify-content: space-between;
   background-color: #f5ba13;
   margin: auto -16px;
   padding: 16px 32px;
@@ -21,10 +24,26 @@ header {
   position: sticky;
 }
 
+header button {
+  
+  color: white;
+  background-color: rgb(71, 67, 67);
+  border: none;
+  padding: 8px;
+  width: 130px;
+  border-radius: 25px;
+}
+header h2{
+  right: auto;
+  color: white;
+left:auto;
+}
+
 header h1 {
   color: #fff;
   font-family: "McLaren", cursive;
   font-weight: 200;
+  display: inline;
 }
 
 footer {
@@ -48,6 +67,7 @@ footer p {
   width: 240px;
   margin: 16px;
   float: left;
+  cursor: pointer;
 }
 .note h1 {
   font-size: 1.1em;
@@ -107,7 +127,7 @@ form.create-note button {
 }
 .login-reg-panel {
   background: #f5ba13;
-  height: 30rem;
+  height: 28rem;
   display: flex;
   width: 60%;
   margin: 7% 20%;
@@ -115,12 +135,9 @@ form.create-note button {
   text-align: center;
 }
 
-.show-log-panel {
-}
-
 /* WHITE PANEL */
 .white-panel {
-  height: 32.25rem;
+  height: 30.25rem;
   box-shadow: 0 0 15px 9px #00000096;
   transition: 0.3s ease-in-out;
 
@@ -143,16 +160,24 @@ form.create-note button {
   margin: 1.25rem 0;
   display: flex;
   flex-wrap: wrap;
+
   padding: 15px;
   border-radius: 1.875rem;
   color: #242424;
   z-index: 1;
   opacity: 0.9;
-  text-align: left;
+  /* text-align: left; */
   transition: 0.3s ease-in-out;
 }
 
-.login-show input[type="text"],
+.login-show p {
+  margin: auto;
+
+  margin-top: 20px;
+  color: rgb(209, 39, 39);
+  font-size: 1rem;
+}
+.login-show input[type="email"],
 .login-show input[type="password"] {
   width: 100%;
   margin: 20px 0;
@@ -165,18 +190,19 @@ form.create-note button {
 
   /* padding: 10px 0; */
 }
-.login-show input[type="button"] {
-  max-width: 150px;
+.login-show button {
+  max-width: 200px;
   width: 100%;
-  background: #444444;
-  color: #f9f9f9;
+  background: #f5ba13;
+  color: white;
   border: none;
+  font-weight: bold;
   padding: 10px;
   text-transform: uppercase;
   border-radius: 2px;
-position: relative;
+  position: relative;
 
-float:right;
+  float: right;
   cursor: pointer;
 }
 /* REGISTER */
@@ -196,7 +222,7 @@ float:right;
   font-weight: 500;
   line-height: 1.2;
 }
-.register-show input[type="button"] {
+.register-show button {
   max-width: 150px;
   width: 100%;
   background: #444444;
@@ -209,6 +235,7 @@ float:right;
   cursor: pointer;
 }
 
+.register-show input[type="email"],
 .register-show input[type="text"],
 .register-show input[type="password"] {
   width: 100%;
