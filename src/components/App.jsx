@@ -19,7 +19,12 @@ import {
   deleteNoteById,
   loginData,
   registerData,
+  GLogin,
+  FLogin,
 } from "../services/UserService";
+
+import { GoogleLogin } from "react-google-login";
+
 var count = 0;
 
 function App() {
@@ -32,17 +37,18 @@ function App() {
 
   const rememberMe = localStorage.getItem("rememberMe");
   const username = localStorage.getItem("username");
-
+  const GoogleId = localStorage.getItem("googleId");
+  const FacebookId = localStorage.getItem("facebookId");
   const fetchAllNotes = () => {
-    getAllNotes().then((response) => {
-      console.log("Fetch All Notes Called");
-      console.log(JSON.stringify(response.data) + "      Fetch All App");
-      //ADDING OBJECT ONLY
-      setmNotes([...response.data]);
-      // console.log(
-      //   JSON.stringify(response.data) + " NOTes ADEDEd   " + response.data
-      // );
-    });
+    if (rememberMe !== null) {
+      console.log("FETCH");
+
+      getAllNotes(rememberMe).then((response) => {
+        console.log("Fetch All Notes Called");
+        console.log(JSON.stringify(response) + "      Fetch All App");
+        setmNotes([...response.data.notes]);
+      });
+    }
   };
 
   console.log("count : " + count);
@@ -54,119 +60,104 @@ function App() {
 
   function handleLogin(data) {
     loginData(data).then((response) => {
-      console.log(JSON.stringify(data) + " This");
-      // const { user, rememberMe } = this.state;
-
-      // localStorage.setItem("user", rememberMe ? user : "");
-
       console.log(JSON.stringify(response) + " LOGIN HANDLe");
-      switch (response.data.bool) {
-        case true:
-          console.log("TRUE");
-          localStorage.setItem("rememberMe", data.email);
-          localStorage.setItem("username", response.data.username);
-          // setmUsername(response.data.username);
-          // setUsername(response.data.username);
-          setIsLogin(true);
-          break;
-        // case "Password Is incorrect*":
-        //   setResponse(response.data);
-        //   break;
-        case false:
-          setResponse("Invalid email or password*");
-          break;
-      }
-      // if (JSON.stringify(response.data)) {
-      //   setIsLogin(true);
-      // } else if (
-      //   JSON.stringify(response.data).localeCompare("Password Is incorrect")
-      // ) {
-      //   console.log("MATCH 1");
-      //   setResponse(response.data);
-      // } else if (JSON.stringify(response.data) === "Invalid email") {
-      //   setResponse(JSON.stringify(response.data));
-      // } //   setResponse(JSON.stringify(response.data));
-      // // }
+      localStorage.setItem("rememberMe", response.data.email);
+      localStorage.setItem("username", response.data.username);
+      window.location.reload();
     });
   }
 
   function handleRegister(data) {
     registerData(data).then((response) => {
       console.log(JSON.stringify(response.data) + "  RESPONSe");
-      if (JSON.stringify(response.data).localeCompare("success")) {
-        setIsRegister(true);
+
+      switch (response.data) {
+        case "success":
+          setIsRegister(true);
+          break;
+        case "Failure":
+          alert("User with this email id already exist");
+
+          setIsRegister(false);
+          break;
       }
     });
   }
 
-  // POST REQUEST
   function handleClick(newNote) {
-    createNotes(newNote).then((response) => {
-      console.log(
-        JSON.stringify(response.data) + "  Front Hend  " + newNote.title
-      );
-
-      // setmNotes((prevValue) => {
-      //   return [...prevValue, newNote];
-      // });
+    console.log(newNote + rememberMe);
+    createNotes(newNote, rememberMe).then((response) => {
+      console.log("RESPONSE " + response);
       fetchAllNotes();
     });
-    // fetchAllNotes()
 
     setNotes((prevValue) => {
       return [...prevValue, newNote];
     });
-    // console.log(JSON.stringify(fetchAllNotes()) + "          ?Front hend");
   }
 
   function deleteNotesData(data) {
     console.log(JSON.stringify(data) + "DELENOTEDATA FUNC");
-    deleteNoteById(data).then(() => {
+    deleteNoteById(data, rememberMe).then(() => {
       console.log("WORKING PROPERLY");
       fetchAllNotes();
     });
   }
 
-  function deleteNote(id) {
-    setNotes((prevValue) => {
-      return prevValue.filter((notes, index) => {
-        return id !== index;
-      });
-    });
-    // NOT REQUIRED THIS METHOD
-    // setmNotes((prevValue) => {
-    //   return prevValue.filter((notes, index) => {
-    //     console.log("Id :" + id + " Index: " + index);
-    //     return id !== index;
-    //   });
-    // });
-  }
   function handleLogout() {
     localStorage.clear();
     console.log("STORAGE CLEARED");
     window.location.reload();
   }
 
+  function googleLogin(googleData) {
+    const google = GLogin(googleData);
+    google.then((response) => {
+      localStorage.setItem("rememberMe", response.data.email);
+      localStorage.setItem("username", response.data.username);
+      window.location.reload();
+    });
+  }
+  function facebookLogin(facebookData) {
+    console.log("CALLED " + JSON.stringify(facebookData));
+    const facebook = FLogin(facebookData);
+    FLogin(facebookData).then((response) => {
+      localStorage.setItem("rememberMe", response.data.email);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("facebookId", response.data.facebookId);
+      window.location.reload();
+    });
+  }
+
+  const responseGoogle = (response) => {
+    console.log(response);
+  };
   return (
     <Router>
       <div>
-        {/* <Link to="/login"></Link>
-        <Link to="/"></Link>
-        <Link to="/"></Link> */}
         <Switch>
           <Route exact path="/login">
             {rememberMe !== null ? (
               <Redirect to="/" />
             ) : (
-              <Login login={handleLogin} LoginResponse={loginResponse} />
+              <Login
+                gLogin={googleLogin}
+                login={handleLogin}
+                LoginResponse={loginResponse}
+                fLogin={facebookLogin}
+              />
             )}
           </Route>
 
           <Route path="/register">
-            {rememberMe !== null ? (
-              <Redirect to="/" />
+            {isRegister ? (
+              <Redirect to="/login" />
             ) : (
-              <Register register={handleRegister} />
+              <Register
+                register={handleRegister}
+                gLogin={googleLogin}
+                fLogin={facebookLogin}
+              />
             )}
           </Route>
 
@@ -175,11 +166,7 @@ function App() {
               <div>
                 <Header heading={username} logout={handleLogout} />
 
-                <CreateArea
-                  // getAllUsers={fetchAllNotes}
-                  //  createUser={userCreate}
-                  addingItems={handleClick}
-                />
+                <CreateArea addingItems={handleClick} />
                 {/* {notes.map((notesData, index) => {  */}
 
                 {mNotes.map((notesData, index) => {
@@ -190,13 +177,11 @@ function App() {
 
                   return (
                     <Note
-                      // getAllUsers={fetchAllNotes}
                       key={index}
                       id={_id}
                       title={title}
                       notesData={notesData}
                       content={content}
-                      deleteNote={deleteNote}
                       deleteNoteById={deleteNotesData}
                     />
                   );

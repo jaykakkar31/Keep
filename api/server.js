@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -8,6 +10,14 @@ const saltRounds = 14;
 const passport = require("passport");
 const session = require("express-session"); //1
 const passportLocalMongoose = require("passport-local-mongoose");
+var GoogleStrategy = require("passport-google-oauth20").Strategy;
+var findOrCreate = require("mongoose-findorcreate"); //5
+
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.CLIENT_Id);
+
+const fetch = require("node-fetch");
+
 const app = express();
 const port = 9000;
 var sessionId;
@@ -43,22 +53,16 @@ const userSchema = new mongoose.Schema({
   email: "",
   username: "",
   password: "",
-  notes: itemsShema,
-
+  notes: [itemsShema],
 });
 
 userSchema.plugin(passportLocalMongoose, { usernameField: "email" }); //1
-
+userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 const Item = mongoose.model("Item", itemsShema);
 
 passport.use(User.createStrategy()); //1
-// passport.use(
-//   new LocalStrategy(
-//     { usernameField: "email", passwordField: "password" },
-//     User.authenticate()
-//   )
-// );
+
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
@@ -68,9 +72,6 @@ passport.deserializeUser(function (id, done) {
     done(err, user);
   });
 });
-
-// passport.serializeUser(User.serializeUser());//1
-// passport.deserializeUser(User.deserializeUser());//1
 
 const item1 = new Item({
   title: "Loki",
@@ -108,124 +109,195 @@ app.get("/", (req, res) => {
   });
 });
 
-app
-  .route("/api/users")
-  .post((req, res) => {
-    const notes = req.body;
-    console.log("Adding user:::::", notes.title + "    " + notes.content);
+app.post("/api/googleLogin", (req, res) => {
+  console.log(JSON.stringify(req.body) + "  Api/Login");
+  const { tokenId, googleId } = req.body;
 
-    res.json("user addedd");
-    const newNote = new Item(notes);
-    newNote.save();
-  })
-  .get((req, res) => {
-      console.log(JSON.stringify(req.sessionID) + " Auth");
- 
-      console.log(JSON.stringify(req.passport) + " Auth");
-      Item.find({}, (err, data) => {
+  client
+    .verifyIdToken({ idToken: tokenId, audience: process.env.CLIENT_Id })
+    .then((response) => {
+      const { email_verified, name, email } = response.payload;
+
+      if (email_verified) {
+        User.findOne({ email: email }, (err, foundUser) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Something went wrong",
+            });
+          } else {
+            if (foundUser) {
+              console.log("Notes Available  " + foundUser.notes);
+              res.send(foundUser);
+            } else {
+              const newUser = new User({
+                email: email,
+                username: name,
+              });
+              newUser.save((err, data) => {
+                if (err) {
+                  console.log(err);
+                }
+                res.send(newUser);
+              });
+            }
+          }
+        });
+      }
+
+      console.log(JSON.stringify(response.payload) + " PAYLOAD");
+    });
+});
+
+app.post("/api/facebookLogin", (req, res) => {
+  console.log(JSON.stringify(req.body) + "  Api/Login");
+
+  const { accessToken, userID } = req.body;
+
+  fetch(
+    `https://graph.facebook.com/${userID}?fields=id,name,email&access_token=${accessToken}`,
+    {
+      method: "post",
+    }
+  )
+    .then((response) => response.json())
+    .then((response) => {
+      const { id, name, email } = response;
+
+      User.findOne({ email: email }, (err, foundUserByID) => {
         if (err) {
-          console.log(err + "               ERROR");
+          console.log(err);
         } else {
-          console.log("Appii/Users");
-          res.send(data);
+          if (foundUserByID) {
+            console.log("Notes Available  " + foundUserByID);
+            res.send(foundUserByID);
+          } else {
+            const newUser = new User({
+              email: email,
+              username: name,
+            });
+            newUser.save((err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                res.send(newUser);
+              }
+            });
+          }
         }
       });
-
-  })
-  .delete((req, res) => {
-    const notesData = req.body;
-    const id = notesData._id;
-    console.log(JSON.stringify(req.body) + "DELETE");
-    console.log(" Delete from server " + notesData._id);
-    Item.findByIdAndRemove(id, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(data + "  SUceesss");
-        res.send(data);
-      }
     });
+});
+
+app.post("/api/users/:email", (req, res) => {
+  const notesReqData = req.body;
+  console.log("Adding user:::::" + JSON.stringify(notesReqData.note));
+
+  User.findOne({ email: req.params.email }, (err, data) => {
+    data.notes.push(notesReqData.note);
+    data.save();
+    console.log(JSON.stringify(data));
+    res.send("USER ADDED");
   });
+});
+
+app.delete("/api/users/:email", (req, res) => {
+  const notesData = req.body;
+  const id = notesData._id;
+  console.log(JSON.stringify(id) + "DELETE");
+  console.log(" Delete from server " + notesData._id);
+  User.findOne({ email: req.params.email }, (err, foundUser) => {
+    if (err) {
+      console.log(err);
+    } else {
+      var newArr = foundUser.notes.filter((i) => {
+        console.log(
+          i._id.toString().localeCompare(id.toString()) + " Value of i"
+        );
+        return i._id.toString().localeCompare(id.toString()) !== 0 && i;
+      });
+
+      console.log(newArr);
+      foundUser.notes = newArr;
+      foundUser.save();
+      console.log("  SUceesss Note Removed");
+      res.send(foundUser);
+    }
+  });
+});
+
+app.get("/api/users/:email", (req, res) => {
+  User.findOne({ email: req.params.email }, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Appii/Users");
+      res.send(data);
+    }
+  });
+});
 
 app.post("/login", (req, res) => {
   const login = req.body;
   console.log(login.password + " ddddddd");
   User.findOne({ email: login.email }, (err, data) => {
     console.log(data + " DATA FROM FINDONE");
-    if (data !== null) {
-      if (err) {
-        console.log(err);
-      } else {
-        req.login(data, function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(data);
-            passport.authenticate("local")(req, res, () => {
-              data.sessionId = JSON.stringify(req.sessionID);
-              data.save()
-              console.log(req.sessionID + " Autt");
-              res.write(
-                JSON.stringify({
-                  bool: true,
-                  username: data.username,
-                })
-              );
-              // res.write(data.username)
-              res.send();
-              // res.send()
-            });
-          }
-        });
-        // bcrypt.compare(req.body.password, data.password, (err, result) => {
-        //   if (result === true) {
-        //     res.json(true);
-        //   } else {
-        //     res.json("Password Is incorrect*");
-        //   }
-        // });
-        // if (data.password === req.body.password) {
-        //               res.json(true);
-
-        //   console.log("PASWWORD CHECK");
-        // } else {
-        //   res.json("Password Is incorrect*");
-        // }
-      }
+    // if (data !== null) {
+    if (err) {
+      console.log(err);
     } else {
-      res.write(
-        JSON.stringify({
-          bool: false,
-          username: "",
-        })
-      );
-      // res.write(data.username)
-      res.send();
-      // res.json("Invalid email or password*");
+      req.login(data, function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(data);
+          passport.authenticate("local")(req, res, () => {
+            res.send(data);
+          });
+        }
+      });
+      // bcrypt.compare(req.body.password, data.password, (err, result) => {
+      //   if (result === true) {
+      //     res.json(true);
+      //   } else {
+      //     res.json("Password Is incorrect*");
+      //   }
+      // });
+      // if (data.password === req.body.password) {
+      //               res.json(true);
+
+      //   console.log("PASWWORD CHECK");
+      // } else {
+      //   res.json("Password Is incorrect*");
+      // }
     }
   });
 });
 
 app.post("/register", (req, res) => {
   const register = req.body;
+  User.findOne({ email: req.body.email }, (err, foundUser) => {
+    if (foundUser) {
+      res.json("Failure")
+    }else{
+      User.register(
+        { email: req.body.email, username: req.body.username },
 
-  User.register(
-    { email: req.body.email, username: req.body.username },
+        req.body.password,
 
-    req.body.password,
-
-    function (err, user) {
-      if (err) {
-        console.log(err);
-        //  res.redirect("/register");
-      } else {
-        console.log("REGISTERED " + user);
-        passport.authenticate("local")(req, res, function () {
-          res.json("success");
-        });
-      }
+        function (err, user) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("REGISTERED " + user);
+            passport.authenticate("local")(req, res, function () {
+              res.json("success");
+            });
+          }
+        }
+      );
     }
-  );
+  });
+  
 
   // console.log(JSON.stringify(register) + "ddddddd");
   // bcrypt.hash(req.body.password, saltRounds, (err, hash) => {

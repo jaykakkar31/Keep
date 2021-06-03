@@ -40,15 +40,10 @@ function CreateArea(props) {
   }
 
   function submit(event) {
-    // const url = "http://localhost:9000/";
-    // props.getAllUsers();
+
 
     event.preventDefault();
-    // axios
-    //   .post(url, { title: notesData.title, content: notesData.content })
-    //   .then((res) => console.log(res.data));
-
-    // props.createUser()
+ 
     if (notesData.title === "") {
       alert("Title Cannot Be Empty");
     } else if (notesData.content === "") {
