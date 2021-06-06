@@ -12,6 +12,7 @@ import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./createArea";
 import Register from "./Register";
+import ForgotPass from "./forgotPass";
 
 import {
   getAllNotes,
@@ -21,6 +22,7 @@ import {
   registerData,
   GLogin,
   FLogin,
+  resetPassword,
 } from "../services/UserService";
 
 import { GoogleLogin } from "react-google-login";
@@ -60,10 +62,18 @@ function App() {
 
   function handleLogin(data) {
     loginData(data).then((response) => {
-      console.log(JSON.stringify(response) + " LOGIN HANDLe");
-      localStorage.setItem("rememberMe", response.data.email);
-      localStorage.setItem("username", response.data.username);
-      window.location.reload();
+      console.log(response +"RESPONSE");
+      if (
+        response.data === "Invalid email or password" ||
+        response.data === "Password Is incorrect"
+      ) {
+        setResponse("Invalid email or password");
+      } else {
+        console.log(JSON.stringify(response) + " LOGIN HANDLe");
+        localStorage.setItem("rememberMe", response.data.email);
+        localStorage.setItem("username", response.data.username);
+        window.location.reload();
+      }
     });
   }
 
@@ -132,6 +142,10 @@ function App() {
   const responseGoogle = (response) => {
     console.log(response);
   };
+
+  function newPasswordHandle(resetDetails) {
+    resetPassword(resetDetails);
+  }
   return (
     <Router>
       <div>
@@ -158,6 +172,13 @@ function App() {
                 gLogin={googleLogin}
                 fLogin={facebookLogin}
               />
+            )}
+          </Route>
+          <Route path="/forgotPass">
+            {rememberMe ? (
+              <Redirect to="/login" />
+            ) : (
+              <ForgotPass forgotPassword={newPasswordHandle} />
             )}
           </Route>
 

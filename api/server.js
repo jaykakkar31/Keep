@@ -20,6 +20,7 @@ const fetch = require("node-fetch");
 
 const app = express();
 const port = 9000;
+var bool = false;
 var sessionId;
 app.use(cors());
 app.use(express.static("public"));
@@ -238,23 +239,43 @@ app.get("/api/users/:email", (req, res) => {
 
 app.post("/login", (req, res) => {
   const login = req.body;
-  console.log(login.password + " ddddddd");
+  var count = 0;
   User.findOne({ email: login.email }, (err, data) => {
-    console.log(data + " DATA FROM FINDONE");
-    // if (data !== null) {
     if (err) {
       console.log(err);
     } else {
-      req.login(data, function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(data);
-          passport.authenticate("local")(req, res, () => {
+      if (data !== null) {
+        bcrypt.compare(req.body.password, data.password, (err, result) => {
+          if (result === true) {
             res.send(data);
-          });
-        }
-      });
+          } else {
+            res.send("Password Is incorrect");
+          }
+        });
+      }
+
+      // if (data !== null) {
+      //   req.login(data, function (err) {
+      //     if (err) {
+      //       console.log(err + "EREOEE");
+      //     } else {
+      //       passport.authenticate("local")(req, res, (err) => {
+      //         //   console.log(err);
+      //         count = count + 1;
+      //         res.write(JSON.stringify(data));
+      //       });
+      //       res.send();
+      //     }
+      //   });
+      // if(count===0){
+      //           res.send("Invalid email or password");
+
+      // }
+      else {
+        console.log(data + "Login Fail");
+
+        res.send("Invalid email or password");
+      }
       // bcrypt.compare(req.body.password, data.password, (err, result) => {
       //   if (result === true) {
       //     res.json(true);
@@ -273,49 +294,91 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.patch("/forgotPass", (req, res) => {
+  const details = req.body;
+  console.log(details);
+
+  User.findOne({ email: req.body.email }, (err, foundUser) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (foundUser) {
+        foundUser.setPassword(req.body.password, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("PasswordReset Success");
+            foundUser.save();
+          }
+        });
+      } else {
+        console.log("USER Doesnot exist");
+      }
+    }
+  });
+});
+
 app.post("/register", (req, res) => {
   const register = req.body;
   User.findOne({ email: req.body.email }, (err, foundUser) => {
     if (foundUser) {
-      res.json("Failure")
-    }else{
-      User.register(
-        { email: req.body.email, username: req.body.username },
-
-        req.body.password,
-
-        function (err, user) {
+      res.json("Failure");
+    } else {
+      bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+        const newUser = new User({
+          email: req.body.email,
+          username: req.body.username,
+          password: hash,
+        });
+        newUser.save((err) => {
           if (err) {
             console.log(err);
           } else {
-            console.log("REGISTERED " + user);
-            passport.authenticate("local")(req, res, function () {
-              res.json("success");
-            });
+            console.log("SuccessFully Inserted ");
+            res.json("success");
           }
-        }
-      );
+        });
+      });
     }
   });
-  
-
-  // console.log(JSON.stringify(register) + "ddddddd");
-  // bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-  //   const newUser = new User({
-  //     email: req.body.email,
-  //     username: req.body.username,
-  //     password: hash,
-  //   });
-  //   newUser.save((err) => {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       console.log("SuccessFully Inserted ");
-  //       res.json("success");
-  //     }
-  //   });
-  // });
 });
+
+//     User.register(
+//       { email: req.body.email, username: req.body.username },
+
+//       req.body.password,
+
+//       function (err, user) {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           console.log("REGISTERED " + user);
+//           passport.authenticate("local")(req, res, function () {
+//             res.json("success");
+//           });
+//         }
+//       }
+//     );
+//   }
+// });
+
+// console.log(JSON.stringify(register) + "ddddddd");
+// bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+//   const newUser = new User({
+//     email: req.body.email,
+//     username: req.body.username,
+//     password: hash,
+//   });
+//   newUser.save((err) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       console.log("SuccessFully Inserted ");
+//       res.json("success");
+//     }
+//   });
+// });
+// });
 
 app.listen(port, () => {
   console.log(`server listens at http://localhost:${port}`);

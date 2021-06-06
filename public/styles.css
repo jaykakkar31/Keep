@@ -135,6 +135,17 @@ form.create-note button {
   text-align: center;
   position: relative;
 }
+.login-reg-panel-forgotPass {
+  background: #f5ba13;
+  height: 28rem;
+  display: flex;
+  width: 60%;
+  border-radius: 10px;
+  margin: 7% 20%;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
 
 /* WHITE PANEL */
 .white-panel {
@@ -146,6 +157,15 @@ form.create-note button {
   z-index: 1;
   width: 60%;
 }
+.white-panel-forgotPass {
+  height: 30.25rem;
+  box-shadow: 0 0 15px 9px #00000096;
+  transition: 0.3s ease-in-out;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 1;
+  width: 55%;
+}
 .white-panel h2 {
   font-size: 2rem;
   /* margin-bottom: 1rem; */
@@ -156,11 +176,6 @@ form.create-note button {
 }
 /* LOGIN  */
 
-.white-panel a,
-.white-panel a:hover {
-  text-decoration: none;
-  color: rgb(66, 64, 64);
-}
 .white-panel span {
   color: #79589f;
   text-decoration: underline;
@@ -171,8 +186,7 @@ form.create-note button {
   font-size: 17px;
   color: #4a5568;
   position: relative;
-  top: 49px;
-  bottom: 0px;
+
   height: 4rem;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -181,11 +195,22 @@ form.create-note button {
 }
 .login-show,
 .register-show {
-  margin: 1.25rem 0;
   display: flex;
   flex-wrap: wrap;
-
+  height: 27rem;
   padding: 15px;
+  border-radius: 1.875rem;
+  color: #242424;
+  z-index: 1;
+  opacity: 0.9;
+  /* text-align: left; */
+  transition: 0.3s ease-in-out;
+}
+.login-show-forgotPass{
+  display: flex;
+  flex-wrap: wrap;
+  height: 27rem;
+  padding: 15px 15px 0 15px;
   border-radius: 1.875rem;
   color: #242424;
   z-index: 1;
@@ -195,9 +220,7 @@ form.create-note button {
 }
 
 .login-show p {
-  margin: auto;
-
-  margin-top: 20px;
+  display: block;
   color: rgb(209, 39, 39);
   font-size: 1rem;
 }
@@ -208,11 +231,29 @@ form.create-note button {
   padding: 15px;
   border: 1px solid #b5b5b5;
 }
+.login-show-forgotPass input[type="email"],
+.login-show-forgotPass input[type="password"]{
+  width: 100%;
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #b5b5b5;
+}
 .login-show a {
   display: inline-flex;
-  margin-left: 4rem;
+  margin-left: 1rem;
+  position: relative;
+  top: -3.2rem;
+
+  height: 2rem;
 
   /* padding: 10px 0; */
+}
+.response {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  align-self: baseline;
 }
 .login-show button {
   max-width: 200px;
@@ -228,6 +269,29 @@ form.create-note button {
 
   float: right;
   cursor: pointer;
+}
+
+.login-show-forgotPass button {
+  max-width: 200px;
+  width: 100%;
+  background: #f5ba13;
+  color: white;
+  border: none;
+  font-weight: bold;
+  padding: 10px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  position: relative;
+
+  float: right;
+  cursor: pointer;
+}
+.login-show-forgotPass h2{
+  height: 3rem;
+}
+.login-show-forgotPass form{
+  position: relative;
+  top: -2rem;
 }
 /* REGISTER */
 /* .register-show {
@@ -276,16 +340,6 @@ form.create-note button {
   width: inherit;
   align-self: center;
 }
-.text-box-facebook {
-  /* position: absolute; */
-  /* width: inherit;
-  display: contents; */
-}
-.text-box-google {
-  /* position: absolute; */
-  /* display: contents;
-  width: inherit; */
-}
 .text-box-facebook button {
   border: none;
   background: none;
@@ -326,7 +380,7 @@ form.create-note button {
   background-color: red;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
- 
+
   padding-left: 10px;
   padding-right: 32px;
 }
@@ -364,13 +418,12 @@ form.create-note button {
   background-color: #4267b2;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
-  
+
   padding-left: 10px;
   padding-right: 15px;
 }
-.google{
+.google {
   cursor: pointer;
-
 }
 
 .text-box p {

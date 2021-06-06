@@ -1,13 +1,13 @@
 import axios from "axios";
 
-export async function createNotes(newNote,email) {
+export async function createNotes(newNote, email) {
   console.log("NEW NOTES " + JSON.stringify(newNote));
   const response = axios({
     method: "post",
     url: `/api/users/${email}`,
-    data:{note:newNote},
+    data: { note: newNote },
   });
-  
+
   return await response;
 }
 
@@ -22,13 +22,13 @@ export async function deleteNoteById(data, email) {
   return response;
 }
 
-export async function loginData(data) {
+export  function loginData(data) {
   const response = axios({
     method: "post",
     url: "/login",
     data,
   });
-  return await response;
+  return  response;
 }
 
 export async function registerData(data) {
@@ -41,7 +41,6 @@ export async function registerData(data) {
 }
 
 export async function GLogin(googleData) {
-
   return await axios({
     method: "post",
     url: "/api/googleLogin",
@@ -54,7 +53,7 @@ export async function GLogin(googleData) {
 }
 
 export async function FLogin(facebookData) {
-    console.log("GOOGLE DATA  " + facebookData);
+  console.log("GOOGLE DATA  " + facebookData);
 
   return await axios({
     method: "post",
@@ -63,6 +62,17 @@ export async function FLogin(facebookData) {
       accessToken: facebookData.accessToken,
       userID: facebookData.userID,
       name: facebookData.name,
+    },
+  });
+}
+
+export async function resetPassword(resetDetails) {
+  return await axios({
+    method: "patch",
+    url: "/forgotPass",
+    data: {
+      email: resetDetails.email,
+      password: resetDetails.password,
     },
   });
 }
