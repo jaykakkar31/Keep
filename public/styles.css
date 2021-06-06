@@ -180,13 +180,13 @@ form.create-note button {
   color: #79589f;
   text-decoration: underline;
 }
-.panel-footer {
+.panel-footer ,.panel-footer:hover{
   display: block;
   padding: 15px 15px;
   font-size: 17px;
   color: #4a5568;
   position: relative;
-
+text-decoration: none;
   height: 4rem;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -206,7 +206,7 @@ form.create-note button {
   /* text-align: left; */
   transition: 0.3s ease-in-out;
 }
-.login-show-forgotPass{
+.login-show-forgotPass {
   display: flex;
   flex-wrap: wrap;
   height: 27rem;
@@ -232,18 +232,19 @@ form.create-note button {
   border: 1px solid #b5b5b5;
 }
 .login-show-forgotPass input[type="email"],
-.login-show-forgotPass input[type="password"]{
+.login-show-forgotPass input[type="password"] {
   width: 100%;
   margin: 20px 0;
   padding: 15px;
   border: 1px solid #b5b5b5;
 }
-.login-show a {
+/* .login-show a:hover, */
+.login-show a  {
   display: inline-flex;
   margin-left: 1rem;
   position: relative;
   top: -3.2rem;
-
+  text-decoration: none;
   height: 2rem;
 
   /* padding: 10px 0; */
@@ -286,10 +287,10 @@ form.create-note button {
   float: right;
   cursor: pointer;
 }
-.login-show-forgotPass h2{
+.login-show-forgotPass h2 {
   height: 3rem;
 }
-.login-show-forgotPass form{
+.login-show-forgotPass form {
   position: relative;
   top: -2rem;
 }

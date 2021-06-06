@@ -29,13 +29,12 @@ function Login(props) {
     } else {
       const response = props.login(loginDetails);
 
-      if (response) {
-        setLoginDetails({
-          email: "",
-          password: "",
-        });
-      }
+    
     }   
+     setLoginDetails({
+       email: "",
+       password: "",
+     });
     event.preventDefault();
 
      
