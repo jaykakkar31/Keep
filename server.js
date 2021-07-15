@@ -13,6 +13,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 var findOrCreate = require("mongoose-findorcreate"); //5
 
+const path=require("path")
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_Id);
 
