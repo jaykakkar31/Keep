@@ -3,14 +3,9 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-let cors = require("cors");
 const bcrypt = require("bcrypt"); //3
 const saltRounds = 14;
-// const passport =require("passport-local")
-const passport = require("passport");
-const session = require("express-session"); //1
-const passportLocalMongoose = require("passport-local-mongoose");
-var GoogleStrategy = require("passport-google-oauth20").Strategy;
+
 var findOrCreate = require("mongoose-findorcreate"); //5
 
 const path=require("path")
@@ -26,16 +21,8 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(
-	session({
-		secret: "Our little secret.",
-		resave: false,
-		saveUninitialized: false,
-	})
-);
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 mongoose.connect(
 	"mongodb+srv://admin-jay:admin-jay@cluster0.0hrwx.mongodb.net/KeeperDB?retryWrites=true&w=majority",
@@ -58,22 +45,12 @@ const userSchema = new mongoose.Schema({
 	notes: [itemsShema],
 });
 
-userSchema.plugin(passportLocalMongoose, { usernameField: "email" }); //1
 userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 const Item = mongoose.model("Item", itemsShema);
 
-passport.use(User.createStrategy()); //1
 
-passport.serializeUser(function (user, done) {
-	done(null, user.id);
-});
 
-passport.deserializeUser(function (id, done) {
-	User.findById(id, function (err, user) {
-		done(err, user);
-	});
-});
 
 const item1 = new Item({
 	title: "Loki",
@@ -87,26 +64,9 @@ const item2 = new Item({
 
 const defaultArray = [item1, item2];
 
-// const whitelist = [
-// 	"http://localhost:3000",
-// 	"http://localhost:9000",
-// 	// "https://shrouded-journey-38552.herokuapp.com",
-// ];
-// const corsOptions = {
-// 	origin: function (origin, callback) {
-// 		console.log("** Origin of request " + origin);
-// 		if (whitelist.indexOf(origin) !== -1 || !origin) {
-// 			console.log("Origin acceptable");
-// 			callback(null, true);
-// 		} else {
-// 			console.log("Origin rejected");
-// 			callback(new Error("Not allowed by CORS"));
-// 		}
-	// },
-// };
 
 
-// app.use(cors(corsOptions));
+
 
 
 
