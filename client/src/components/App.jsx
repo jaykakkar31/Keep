@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -25,22 +25,16 @@ import {
 	resetPassword,
 } from "../services/UserService";
 
-import { GoogleLogin } from "react-google-login";
-
 var count = 0;
 
 function App() {
 	const [isRegister, setIsRegister] = useState(false);
-	const [isLogin, setIsLogin] = useState(false);
 	const [notes, setNotes] = useState([]);
 	const [mNotes, setmNotes] = useState([]);
 	const [loginResponse, setResponse] = useState();
-	const [mUsername, setmUsername] = useState("");
 
 	const rememberMe = localStorage.getItem("rememberMe");
 	const username = localStorage.getItem("username");
-	const GoogleId = localStorage.getItem("googleId");
-	const FacebookId = localStorage.getItem("facebookId");
 	const fetchAllNotes = () => {
 		if (rememberMe !== null) {
 			console.log("FETCH");
@@ -53,12 +47,13 @@ function App() {
 		}
 	};
 
-	console.log("count : " + count);
-
-	if (count === 0) {
-		count++;
+	// if (count === 0) {
+	// 	count++;
+	// 	fetchAllNotes();
+	// }
+	useEffect(() => {
 		fetchAllNotes();
-	}
+	});
 
 	function handleLogin(data) {
 		loginData(data).then((response) => {
@@ -89,6 +84,8 @@ function App() {
 					alert("User with this email id already exist");
 
 					setIsRegister(false);
+					break;
+				default:
 					break;
 			}
 		});
@@ -121,8 +118,7 @@ function App() {
 	}
 
 	function googleLogin(googleData) {
-		const google = GLogin(googleData);
-		google.then((response) => {
+		GLogin(googleData).then((response) => {
 			localStorage.setItem("rememberMe", response.data.email);
 			localStorage.setItem("username", response.data.username);
 			window.location.reload();
@@ -130,7 +126,6 @@ function App() {
 	}
 	function facebookLogin(facebookData) {
 		console.log("CALLED " + JSON.stringify(facebookData));
-		const facebook = FLogin(facebookData);
 		FLogin(facebookData).then((response) => {
 			localStorage.setItem("rememberMe", response.data.email);
 			localStorage.setItem("username", response.data.username);
@@ -138,10 +133,6 @@ function App() {
 			window.location.reload();
 		});
 	}
-
-	const responseGoogle = (response) => {
-		console.log(response);
-	};
 
 	function newPasswordHandle(resetDetails) {
 		resetPassword(resetDetails);
@@ -192,9 +183,6 @@ function App() {
 
 								{mNotes.map((notesData, index) => {
 									const { title, content, _id } = notesData;
-									{
-										/* console.log(index + "  MAP  " + JSON.stringify(notesData)); */
-									}
 
 									return (
 										<Note

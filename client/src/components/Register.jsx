@@ -37,9 +37,7 @@ function Register(props) {
 		});
 	}
 	const handleLogin = (googleData) => {
-		//HANDLED BY GOOGLE
 		console.log(googleData);
-
 		props.gLogin(googleData);
 	};
 	const responseFacebook = (facebookData) => {

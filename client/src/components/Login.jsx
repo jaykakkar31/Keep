@@ -25,7 +25,7 @@ function Login(props) {
 		} else if (loginDetails.password === "") {
 			alert("Password Cannot Be Empty");
 		} else {
-			const response = props.login(loginDetails);
+			props.login(loginDetails);
 		}
 		setLoginDetails({
 			email: "",
@@ -34,25 +34,11 @@ function Login(props) {
 		event.preventDefault();
 	}
 
-	const responseGoogle = (response) => {
-		console.log(response);
-	};
+
 
 	const handleLogin = (googleData) => {
-		//HANDLED BY GOOGLE
-		console.log(googleData);
-
 		props.gLogin(googleData);
-		// axios({
-		//   method: "post",
-		//   url: "/api/googleLogin",
-		//   data: { tokenId: googleData.tokenId ,googleId:googleData.googleId},
-		// }).then((response) => {
-		//   console.log(JSON.stringify(response) + " RESPONSE");
-		// });
-		// const data = res.json();
-		// console.log(data + "  DATA FROM GOOGLE LOGIN");
-		// store returned user somehow
+	
 	};
 	const responseFacebook = (facebookData) => {
 		console.log(facebookData);
@@ -84,13 +70,11 @@ function Login(props) {
 							LOGIN
 						</button>
 
-						{/* <input type="button" value="Login" /> */}
 					</form>
 					<a href="/forgotPass">Forgot password?</a>
 					<div className="response">
 						<p>{props.LoginResponse}</p>
 					</div>
-					{console.log(props.LoginResponse + "  pppppppppppp")}
 				</div>
 				<a className="panel-footer" href="/register">
 					New to Keeper? &nbsp;
@@ -105,7 +89,7 @@ function Login(props) {
 						render={(renderProps) => (
 							<button className="google" onClick={renderProps.onClick}>
 								<div className="icon">
-									<img src="https://prodcmscdn.azureedge.net/careerconnectresources/p/MICRUS/en_us/desktop/assets/images/google.png"></img>
+									<img alt="img" src="https://prodcmscdn.azureedge.net/careerconnectresources/p/MICRUS/en_us/desktop/assets/images/google.png"></img>
 								</div>
 								<div className="text">
 									<h3>Sign in with Google</h3>
@@ -125,7 +109,7 @@ function Login(props) {
 						render={(renderProps) => (
 							<button className="facebook" onClick={renderProps.onClick}>
 								<div className="icon">
-									<img src="https://prodcmscdn.azureedge.net/careerconnectresources/p/MICRUS/en_us/desktop/assets/images/fb.jpg"></img>
+									<img alt="img" src="https://prodcmscdn.azureedge.net/careerconnectresources/p/MICRUS/en_us/desktop/assets/images/fb.jpg"></img>
 								</div>
 								<div className="text">
 									<h3>Sign in with Facebook</h3>

@@ -41,8 +41,8 @@ export async function registerData(data) {
 }
 
 export async function GLogin(googleData) {
-    
-	console.log(googleData);
+
+	
 	return await axios({
 		method: "post",
 		url: "/api/googleLogin",
