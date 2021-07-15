@@ -87,26 +87,26 @@ const item2 = new Item({
 
 const defaultArray = [item1, item2];
 
-const whitelist = [
-	"http://localhost:3000",
-	"http://localhost:9000",
-	// "https://shrouded-journey-38552.herokuapp.com",
-];
-const corsOptions = {
-	origin: function (origin, callback) {
-		console.log("** Origin of request " + origin);
-		if (whitelist.indexOf(origin) !== -1 || !origin) {
-			console.log("Origin acceptable");
-			callback(null, true);
-		} else {
-			console.log("Origin rejected");
-			callback(new Error("Not allowed by CORS"));
-		}
-	},
-};
+// const whitelist = [
+// 	"http://localhost:3000",
+// 	"http://localhost:9000",
+// 	// "https://shrouded-journey-38552.herokuapp.com",
+// ];
+// const corsOptions = {
+// 	origin: function (origin, callback) {
+// 		console.log("** Origin of request " + origin);
+// 		if (whitelist.indexOf(origin) !== -1 || !origin) {
+// 			console.log("Origin acceptable");
+// 			callback(null, true);
+// 		} else {
+// 			console.log("Origin rejected");
+// 			callback(new Error("Not allowed by CORS"));
+// 		}
+	// },
+// };
 
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 
 
