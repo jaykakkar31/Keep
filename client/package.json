@@ -1,6 +1,6 @@
 {
 	"name": "client",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "",
 	"private": true,
 	"keywords": [],
@@ -28,7 +28,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
-    "homepage": "/",
+	"homepage": "/",
 	"browserslist": {
 		"production": [
 			">0.2%",
