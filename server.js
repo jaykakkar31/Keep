@@ -87,29 +87,29 @@ const item2 = new Item({
 
 const defaultArray = [item1, item2];
 
-app.get("/", (req, res) => {
-	Item.find({}, (err, data) => {
-		if (data.length === 0) {
-			Item.insertMany(defaultArray, (err) => {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log("SuccessFully Inserted");
-					res.redirect("/");
-				}
-			});
-		} else {
-			console.log(data + "       Get(/)");
+// app.get("/", (req, res) => {
+// 	Item.find({}, (err, data) => {
+// 		if (data.length === 0) {
+// 			Item.insertMany(defaultArray, (err) => {
+// 				if (err) {
+// 					console.log(err);
+// 				} else {
+// 					console.log("SuccessFully Inserted");
+// 					res.redirect("/");
+// 				}
+// 			});
+// 		} else {
+// 			console.log(data + "       Get(/)");
 
 		
 
-			console.log("Exists" + data.length);
-			//FOR Axios Use
+// 			console.log("Exists" + data.length);
+// 			//FOR Axios Use
 
-			res.send(data);
-		}
-	});
-});
+// 			res.send(data);
+// 		}
+// 	});
+// });
 
 app.post("/api/googleLogin", (req, res) => {
 	console.log(JSON.stringify(req.body) + "  Api/Login");
