@@ -4,6 +4,7 @@
 	"description": "",
 	"private": true,
 	"keywords": [],
+	"proxy": "http://localhost:9000",
 	"dependencies": {
 		"@material-ui/core": "^4.11.4",
 		"@material-ui/icons": "^4.11.2",
@@ -24,7 +25,7 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
+		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
 	"browserslist": {
@@ -38,6 +39,5 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	},
-	"proxy": "http://localhost:9000"
+	}
 }
