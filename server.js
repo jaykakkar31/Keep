@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-let cors = require("cors");
+// let cors = require("cors");
 const bcrypt = require("bcrypt"); //3
 const saltRounds = 14;
 // const passport =require("passport-local")
@@ -16,14 +16,12 @@ var findOrCreate = require("mongoose-findorcreate"); //5
 const path=require("path")
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_Id);
-
 const fetch = require("node-fetch");
 
 const app = express();
-const port = 9000||process.env.PORT;
-var bool = false;
-var sessionId;
-app.use(cors());
+const port = process.env.PORT||9000;
+
+// app.use(cors());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
@@ -90,7 +88,29 @@ const item2 = new Item({
 
 const defaultArray = [item1, item2];
 
-g
+app.get("/", (req, res) => {
+	Item.find({}, (err, data) => {
+		if (data.length === 0) {
+			Item.insertMany(defaultArray, (err) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log("SuccessFully Inserted");
+					res.redirect("/");
+				}
+			});
+		} else {
+			console.log(data + "       Get(/)");
+
+		
+
+			console.log("Exists" + data.length);
+			//FOR Axios Use
+
+			res.send(data);
+		}
+	});
+});
 
 app.post("/api/googleLogin", (req, res) => {
 	console.log(JSON.stringify(req.body) + "  Api/Login");
@@ -293,10 +313,10 @@ app.post("/register", (req, res) => {
 });
 
 
-if(process.env.PROD==="production"){
-    app.use(express.static('client/build'))
+if(process.env.NOD_ENV==='production'){
+    app.use(express.static('./client/build'))
     app.get('*',(req,res)=>{
-        res.sendFile(path.join(__dirname,'.client/build/index.html'))
+        res.sendFile(path.resolve(__dirname,'./client/build','index.html'))
     })
 }
 

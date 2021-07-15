@@ -48,7 +48,6 @@ export async function GLogin(googleData) {
 		data: {
 			tokenId: googleData.tokenId,
 			googleId: googleData.googleId,
-
 			email: googleData.profileObj.email,
 		},
 	});
