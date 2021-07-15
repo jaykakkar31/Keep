@@ -22,7 +22,7 @@ function CreateArea(props) {
 				...prevValue,
 				[name]: value,
 			};
-			console.log(notesdata);
+			
 		});
 	}
 
