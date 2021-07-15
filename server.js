@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// let cors = require("cors");
+let cors = require("cors");
 const bcrypt = require("bcrypt"); //3
 const saltRounds = 14;
 // const passport =require("passport-local")
