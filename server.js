@@ -40,10 +40,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/KeeperAppDB", {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+mongoose.connect(
+	"mongodb+srv://admin-jay:admin-jay@cluster0.0hrwx.mongodb.net/KeeperDB?retryWrites=true&w=majority",
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	}
+);
 mongoose.set("useCreateIndex", true);
 
 mongoose.set("useFindAndModify", false);
@@ -312,8 +315,8 @@ app.post("/register", (req, res) => {
 });
 
 
-if(process.env.PROD){
-    app.use(express.static(path.join(__dirname,'./client/build')))
+if(process.env.PROD==="production"){
+    app.use(express.static('client/build'))
     app.get('*',(req,res)=>{
         res.sendFile(path.join(__dirname,'.client/build/index.html'))
     })
